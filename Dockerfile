@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 RUN pip3 install --no-cache-dir dash[diskcache] gunicorn pyarrow joblib redis
 
-COPY openalex_analysis openalex_analysis
+COPY openalex-analysis/openalex_analysis openalex_analysis
 COPY OpenAlex_concepts_in_use_(17_August_2022)_-_concepts.csv OpenAlex_concepts_in_use_(17_August_2022)_-_concepts.csv
 COPY list_all_institutions_full.parquet list_all_institutions_full.parquet
 COPY redis.conf redis.conf

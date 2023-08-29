@@ -1,0 +1,3 @@
+[submodule "openalex-analysis"]
+	path = openalex-analysis
+	url = git@github.com:romain894/openalex-analysis.git
