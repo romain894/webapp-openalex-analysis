@@ -9,8 +9,6 @@ import os
 from redis import StrictRedis
 from redis_cache import RedisCache
 
-from openalex_analysis.plot import config
-
 config_email = None # set the email to use the polite pool
 config_api_key = None
 config_openalex_url = "https://api.openalex.org"
