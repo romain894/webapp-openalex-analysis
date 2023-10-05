@@ -252,10 +252,17 @@ def update_button_start_references_analysis_disabled_status(concept, institution
 
 def get_dash_table_works_citing(wplt):
     df = wplt.entities_df[['id', 'doi', 'display_name', 'author_citation_style', 'publication_year']].copy()
+    # sort by publication date:
+    df = df.sort_values(by=['publication_year'], ascending=False)
     # reordre the columns:
     df = df[['display_name', 'author_citation_style', 'publication_year', 'doi', 'id']]
-    df = df.rename(columns={'display_name': 'Title', 'author_citation_style': 'Authors', 'publication_year': 'Year'})
-    print(df)
+    df = df.rename(columns={
+        'display_name': 'Title',
+        'author_citation_style': 'Authors',
+        'publication_year': 'Year',
+        'doi': 'DOI',
+        'id': 'OpenAlex ID',
+    })
     table = dash_table.DataTable(
         df.to_dict('records', index = True),
         [{"name": i, "id": i} for i in df.columns],
@@ -285,9 +292,52 @@ def get_dash_table_works_citing(wplt):
     return table
 
 
+def get_dash_table_authors_citing(wplt):
+    df = wplt.get_authors_count()
+    # reordre the columns:
+    df = df[['author.display_name', 'count', 'raw_affiliation_string', 'author.orcid', 'author.id']]
+    df = df.rename(columns={
+        'author.display_name': 'Authors',
+        'count': 'Count',
+        'raw_affiliation_string': 'Affiliation',
+        'author.orcid': 'ORCID',
+        'author.id': 'OpenAlex ID',
+    })
+    table = dash_table.DataTable(
+        df.to_dict('records', index = True),
+        [{"name": i, "id": i} for i in df.columns],
+        id = '4_table_authors',
+        style_cell = layout_parameters.dash_table_style_cell,
+        # style_data_conditional = dash_table_ref_conditional_style,
+        style_data_conditional = [
+            {
+                'if': {'column_id': c},
+                'width': '170px'
+            } for c in df.columns
+        ] + [
+            {
+                'if': {'column_id': 'Authors'},
+                 'width': '350px'
+            },
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': 'rgb(240, 240, 240)',
+            },
+        ],
+        style_header = layout_parameters.dash_table_style_header,
+        # fixed_columns={'headers': True, 'data': 1},
+        style_table={'minWidth': '100%', 'overflowX': 'auto'},
+        page_size=20,
+    )
+    print("coucou")
+    return table
+
 
 @app.callback(
-    Output('4_div_table_works', 'children'),
+    [
+        Output('4_div_table_works', 'children'),
+        Output('4_div_table_authors', 'children'),
+    ],
     Input('4_start_analysis_btn', 'n_clicks'),
     State('4_concept_dropdown', 'value'),
     State('4_institution_dropdown', 'value'),
@@ -302,6 +352,7 @@ def analyse_reference_citations(n_clicks, concept, institution, reference):
     wplt = WorksPlot(concept, extra_filters = extra_filters)
     wplt.add_authorships_citation_style()
     table_works = get_dash_table_works_citing(wplt)
-    #print(wplt.entities_df)
-    return table_works
+    table_authors = get_dash_table_authors_citing(wplt)
+    
+    return table_works, table_authors
 
