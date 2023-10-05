@@ -61,6 +61,7 @@ main_container = dbc.Container(className="container-app-references-analysis", id
                     html.H1(children="Analysis of an institution"),
                     html.H3(children="Institution to analyse"),
                     dcc.Dropdown(id='ref3_institutions_dropdown', clearable=True, placeholder='Type at least 5 characters (for example "Stockholm Resilience Centre")',),
+                    dbc.Alert(children="Coming soon...", color="danger"),
                 ],
                 **layout_parameters.layout_dynamic_width,
             ),

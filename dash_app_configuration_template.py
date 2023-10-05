@@ -25,3 +25,6 @@ config_redis_client = StrictRedis(host=os.environ.get('DOCKER_REDIS_URL', "local
                                  port=6379,
                                  db=2,)
 config_redis_cache = RedisCache(redis_client=config_redis_client)
+
+# app specific configuraiton
+config_app_url = "https://example.com/"
