@@ -240,7 +240,7 @@ main_container = dbc.Container(className="container-app-references-analysis", id
                 ]
             )
         ]
-    ), 
+    ),
 ])
 
 
